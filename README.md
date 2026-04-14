@@ -17,19 +17,39 @@ Replace this paragraph with your own summary of what your version does.
 
 ## How The System Works
 
-Explain your design in plain language.
+Real-world music recommendation systems like Spotify and YouTube combine collaborative filtering (analyzing what similar users like) with content-based filtering (matching song attributes to user preferences) to predict what listeners will enjoy next. They prioritize user engagement by balancing familiarity with discovery, using vast amounts of behavioral data (plays, skips, likes) and audio features (tempo, energy, mood). My simplified version focuses on content-based filtering only, prioritizing musical "vibe" matching through numerical similarity scores on key audio features, with categorical boosts for genre and mood matches, to simulate how platforms recommend based on song characteristics rather than user behavior patterns.
 
-Some prompts to answer:
+**Song Object Features:**
+- genre (categorical: pop, lofi, rock, etc.)
+- mood (categorical: happy, chill, intense, etc.)  
+- energy (numerical 0-1: intensity level)
+- tempo_bpm (numerical: beats per minute)
+- valence (numerical 0-1: musical positivity/happiness)
+- danceability (numerical 0-1: suitability for dancing)
+- acousticness (numerical 0-1: acoustic vs. electronic)
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
+**UserProfile Object Features:**
+- preferred_genre (categorical)
+- preferred_mood (categorical)
+- preferred_energy (numerical 0-1)
+- preferred_tempo_bpm (numerical)
+- preferred_valence (numerical 0-1)
+- preferred_danceability (numerical 0-1)
+- preferred_acousticness (numerical 0-1)
 
-You can include a simple diagram or bullet list if helpful.
+The Recommender computes a score for each song using Gaussian similarity for numerical features (rewarding closeness to user preferences) and exact-match bonuses for categorical features, then ranks songs by total score to recommend the top matches.
 
----
+**Algorithm Recipe:**
+- **Scoring Formula**: `total_score = genre_bonus + mood_bonus + (energy_sim * 0.8) + (valence_sim * 0.8) + (tempo_sim * 0.6) + (danceability_sim * 0.6) + (acousticness_sim * 0.4)`
+- **Categorical Bonuses**: Genre match = +2.0 points, Mood match = +1.0 points
+- **Numerical Similarities**: Gaussian similarity `exp(-((song_value - user_pref)^2) / (2 * 0.2^2))` (0-1 scale)
+- **Ranking Rule**: Sort songs by total_score descending, return top 5 recommendations
+
+**Potential Biases:**
+- **Genre Over-prioritization**: The +2.0 genre bonus might ignore excellent songs that match mood/energy perfectly but are different genres (e.g., a happy rock song for a pop fan)
+- **Numerical Dominance**: If numerical similarities are weighted too high, categorical preferences (genre/mood) could be overshadowed, leading to recommendations that feel "close" but wrong in style
+- **Content-Only Limitation**: Lacks collaborative filtering, so it can't discover songs popular with similar users, potentially missing serendipitous recommendations
+- **Scale Sensitivity**: Gaussian sigma=0.2 might be too strict for some features, creating harsh penalties for small differences
 
 ## Getting Started
 
