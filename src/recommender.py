@@ -83,8 +83,8 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     
     # Categorical bonuses
     if song['genre'] == user_prefs.get('genre'):
-        score += 2.0
-        reasons.append(f"genre match (+2.0)")
+        score += 1.0  # experimental weight shift: reduce genre influence
+        reasons.append(f"genre match (+1.0)")
     
     if song['mood'] == user_prefs.get('mood'):
         score += 1.0
@@ -93,7 +93,7 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     # Numerical similarities with Gaussian
     sigma = 0.2
     numerical_features = [
-        ('energy', 0.8),
+        ('energy', 1.6),  # experimental weight shift: emphasize energy more strongly
         ('valence', 0.8), 
         ('tempo_bpm', 0.6),
         ('danceability', 0.6),

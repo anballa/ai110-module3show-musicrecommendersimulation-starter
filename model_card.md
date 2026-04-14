@@ -61,14 +61,7 @@ Prompts:
 
 ## 6. Limitations and Bias 
 
-Where the system struggles or behaves unfairly. 
-
-Prompts:  
-
-- Features it does not consider  
-- Genres or moods that are underrepresented  
-- Cases where the system overfits to one preference  
-- Ways the scoring might unintentionally favor some users  
+The system currently over-prioritizes strong matches on genre and energy, which can create a kind of filter bubble in this small dataset. Because the catalog has only 18 songs and a few genres are more prominent, the recommender tends to favor common or strongly weighted combinations rather than offering diverse alternatives. Users with unusual profiles, such as high energy but sad mood or acoustic preferences, may be under-served because the scoring is driven more by energy and genre than by mood or acousticness. This means the model can ignore less frequent musical tastes and may not generalize well beyond the current song list. 
 
 ---
 
